@@ -1,0 +1,10 @@
+{
+  "name": "@cognis/ssltriage",
+  "version": "0.2.0",
+  "description": "JavaScript port of ssltriage (Cognis Neural Suite)",
+  "bin": {
+    "ssltriage": "index.js"
+  },
+  "license": "LicenseRef-COCL-1.0",
+  "type": "module"
+}
