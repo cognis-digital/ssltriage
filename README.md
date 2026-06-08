@@ -122,7 +122,17 @@ Pipes into your stack: **SARIF** for code-scanning, **JSON** for anything, an **
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="install-anywhere"></a>
-## Install anywhere
+## Install — every way, every platform
+
+```bash
+pip install "git+https://github.com/cognis-digital/ssltriage.git"    # pip (works today)
+pipx install "git+https://github.com/cognis-digital/ssltriage.git"   # isolated CLI
+uv tool install "git+https://github.com/cognis-digital/ssltriage.git" # uv
+pip install cognis-ssltriage                                          # PyPI (when published)
+docker run --rm ghcr.io/cognis-digital/ssltriage:latest --help        # Docker
+brew install cognis-digital/tap/ssltriage                             # Homebrew tap
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/ssltriage/main/install.sh | sh
+```
 
 | Linux | macOS | Windows | Docker | Cloud |
 |---|---|---|---|---|
