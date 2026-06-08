@@ -1,0 +1,29 @@
+Connecting to legacy.internal.example:443
+ SCAN RESULTS FOR legacy.internal.example - 203.0.113.42
+
+ * SSL 2.0 Cipher suites:
+     Server rejected all cipher suites.
+
+ * SSL 3.0 Cipher suites:
+     Server rejected all cipher suites.
+
+ * TLS 1.0 Cipher suites:
+     The server accepted the following 3 cipher suites for TLSv1.0:
+        TLS_RSA_WITH_RC4_128_SHA
+        TLS_RSA_WITH_3DES_EDE_CBC_SHA
+        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
+
+ * TLS 1.1 Cipher suites:
+     The server accepted the following 1 cipher suites for TLSv1.1:
+        TLS_RSA_WITH_AES_256_CBC_SHA
+
+ * TLS 1.2 Cipher suites:
+     The server accepted the following 2 cipher suites for TLSv1.2:
+        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+
+ * Certificate Information:
+     Subject:    CN = legacy.internal.example
+     Issuer:     CN = Internal Issuing CA
+     not before: Jun  1 00:00:00 2026 GMT
+     not after:  Jun 20 23:59:59 2026 GMT
