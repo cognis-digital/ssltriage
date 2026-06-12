@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-ssltriage
+pip install "git+https://github.com/cognis-digital/ssltriage.git"
 ssltriage scan .            # → prioritized findings in seconds
 ```
 
@@ -48,7 +48,7 @@ TLS report card
 ## Quick start
 
 ```bash
-pip install cognis-ssltriage
+pip install "git+https://github.com/cognis-digital/ssltriage.git"
 ssltriage --version
 ssltriage scan .                       # scan current project
 ssltriage scan . --format json         # machine-readable
