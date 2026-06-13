@@ -20,6 +20,30 @@ pip install cognis-ssltriage
 ssltriage scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+1. **Install** the CLI (console script `ssltriage`):
+   ```bash
+   pip install cognis-ssltriage
+   ```
+2. **Grade TLS output** — pipe `openssl`/`sslyze` output into `grade` (or pass a file; `-` = stdin) to get a TLS report card:
+   ```bash
+   openssl s_client -connect example.com:443 -showcerts </dev/null | ssltriage grade -
+   ```
+3. **Annotate the target / emit JSON** — label the host and produce machine-readable output:
+   ```bash
+   ssltriage grade scan.txt --target example.com --format json > tls.json
+   ```
+4. **Read the output** — the report has `grade` (A–F), `score`/100, `worst_severity`, negotiated `protocols`, `cert_days_remaining`, and a `findings` list (code/severity/message). Exit `1` once a finding meets the `--fail-on` threshold (default `medium`), else `0`:
+   ```bash
+   ssltriage grade scan.txt --format json | jq '.grade, .cert_days_remaining'
+   ```
+5. **Automate in CI** — fail on actionable TLS findings:
+   ```yaml
+   - run: pip install cognis-ssltriage
+   - run: ssltriage grade scan.txt --fail-on high
+   ```
+
 ## Contents
 
 - [Why ssltriage?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
