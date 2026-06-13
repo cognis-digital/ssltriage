@@ -16,9 +16,15 @@
 </div>
 
 ```bash
-pip install cognis-ssltriage
+pip install "git+https://github.com/cognis-digital/ssltriage.git"
 ssltriage scan .            # → prioritized findings in seconds
 ```
+
+<!-- cognis:layman:start -->
+## What is this?
+
+ssltriage reads the text output from common SSL/TLS inspection tools (such as openssl or sslyze) and gives your server's encryption setup a letter grade from A to F — just like a report card. It checks whether outdated, insecure protocol versions (like TLS 1.0) are enabled, whether weak cipher algorithms are in use, and whether your certificate is about to expire or has already expired. It's aimed at developers, security engineers, and system administrators who want a quick, no-fuss way to spot and prioritize TLS misconfigurations in CI pipelines, scripts, or AI agent workflows.
+<!-- cognis:layman:end -->
 
 ## Contents
 
@@ -45,10 +51,56 @@ TLS report card
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="quick-start"></a>
+<!-- cognis:domains:start -->
+## Domains
+
+**Primary domain:** Cyber & Security  ·  **JTF MERIDIAN division:** NULLBYTE · SPECTER
+
+**Topics:** `cognis` `security` `infosec` `cybersecurity` `blue-team`
+
+Part of the **Cognis Neural Suite** — 300+ source-available tools organized across 12 domains under the JTF MERIDIAN command structure. See the [suite on GitHub](https://github.com/cognis-digital) and [jtf-meridian](https://github.com/cognis-digital/jtf-meridian) for how the pieces fit together.
+<!-- cognis:domains:end -->
+
+<!-- cognis:install:start -->
+## Install
+
+`ssltriage` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/ssltriage/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/ssltriage/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/ssltriage.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/ssltriage.git"  # uv
+pip install "git+https://github.com/cognis-digital/ssltriage.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/ssltriage.git
+cd ssltriage && pip install .
+```
+
+Then run:
+```sh
+ssltriage --help
+```
+<!-- cognis:install:end -->
+
 ## Quick start
 
 ```bash
-pip install cognis-ssltriage
+pip install "git+https://github.com/cognis-digital/ssltriage.git"
 ssltriage --version
 ssltriage scan .                       # scan current project
 ssltriage scan . --format json         # machine-readable
