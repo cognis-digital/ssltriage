@@ -80,7 +80,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
-    if args.command != "grade":
+    if getattr(args, "command", None) != "grade":
         parser.print_help()
         return _EXIT_ERROR
 
@@ -90,7 +90,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"{TOOL_NAME}: cannot read input: {exc}", file=sys.stderr)
         return _EXIT_ERROR
 
-    report = triage(text, target=args.target)
+    try:
+        report = triage(text, target=args.target)
+    except (TypeError, ValueError) as exc:
+        print(f"{TOOL_NAME}: invalid input: {exc}", file=sys.stderr)
+        return _EXIT_ERROR
+    except Exception as exc:  # noqa: BLE001
+        print(f"{TOOL_NAME}: unexpected error during triage: {exc}", file=sys.stderr)
+        return _EXIT_ERROR
 
     if args.format == "json":
         print(json.dumps(report.to_dict(), indent=2))

@@ -128,6 +128,72 @@ class TestCLI(unittest.TestCase):
         code, _, _ = self._run([])
         self.assertEqual(code, 2)
 
+    def test_missing_file_exits_2(self):
+        """Non-existent file path should print error to stderr and return 2."""
+        code, out, err = self._run(["grade", "/nonexistent/path/file.txt"])
+        self.assertEqual(code, 2)
+        self.assertIn("cannot read input", err)
+        self.assertEqual(out, "")
+
+    def test_empty_input_exits_2(self):
+        """Blank stdin should print a clear error and return 2, not traceback."""
+        code, out, err = self._run(["grade", "-"], stdin="   \n  \n")
+        self.assertEqual(code, 2)
+        self.assertIn("invalid input", err)
+        self.assertEqual(out, "")
+
+    def test_empty_input_json_exits_2(self):
+        """Blank stdin with --format json should return 2 with a stderr message."""
+        code, out, err = self._run(["grade", "-", "--format", "json"], stdin="")
+        self.assertEqual(code, 2)
+        self.assertIn("invalid input", err)
+
+    def test_fail_on_high_exits_zero_for_medium(self):
+        """--fail-on high should exit 0 when only medium/info findings exist."""
+        # Cert far in future: no CERT_EXPIRING; 3DES is medium; no high/critical.
+        text = (
+            "TLSv1.2\nnot after: Jan 01 00:00:00 2030 GMT\n"
+            "TLS_RSA_WITH_3DES_EDE_CBC_SHA\n"
+        )
+        code, _, _ = self._run(["grade", "-", "--fail-on", "high"], stdin=text)
+        self.assertEqual(code, 0)
+
+
+class TestCoreEdgeCases(unittest.TestCase):
+    """Tests for input-validation guards added to core."""
+
+    def test_parse_input_rejects_none(self):
+        from ssltriage.core import parse_input
+        with self.assertRaises(TypeError):
+            parse_input(None)  # type: ignore[arg-type]
+
+    def test_parse_input_rejects_non_string(self):
+        from ssltriage.core import parse_input
+        with self.assertRaises(TypeError):
+            parse_input(42)  # type: ignore[arg-type]
+
+    def test_parse_input_rejects_blank(self):
+        from ssltriage.core import parse_input
+        with self.assertRaises(ValueError):
+            parse_input("   ")
+
+    def test_triage_rejects_empty(self):
+        """triage() with empty string should raise ValueError, not crash."""
+        with self.assertRaises(ValueError):
+            triage("")
+
+    def test_grade_report_empty_findings(self):
+        """grade_report([]) should return perfect score without crashing."""
+        score, grade = grade_report([])
+        self.assertEqual(score, 100)
+        self.assertEqual(grade, "A")
+
+    def test_mcp_server_importable(self):
+        """mcp_server module must import cleanly (no broken top-level imports)."""
+        import importlib
+        mod = importlib.import_module("ssltriage.mcp_server")
+        self.assertTrue(callable(mod.serve))
+
 
 if __name__ == "__main__":
     unittest.main()

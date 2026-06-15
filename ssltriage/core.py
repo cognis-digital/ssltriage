@@ -11,6 +11,8 @@ import re
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, List, Optional
 
+_UTC = _dt.timezone.utc
+
 # ---------------------------------------------------------------------------
 # Severity model
 # ---------------------------------------------------------------------------
@@ -79,10 +81,16 @@ class TriageReport:
     def worst_severity(self) -> str:
         if not self.findings:
             return "info"
-        return max(self.findings, key=lambda f: SEVERITY_ORDER[f.severity]).severity
+        return max(
+            self.findings,
+            key=lambda f: SEVERITY_ORDER.get(f.severity, 0),
+        ).severity
 
     def has_actionable_findings(self) -> bool:
-        return any(SEVERITY_ORDER[f.severity] >= SEVERITY_ORDER["medium"] for f in self.findings)
+        return any(
+            SEVERITY_ORDER.get(f.severity, 0) >= SEVERITY_ORDER["medium"]
+            for f in self.findings
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -133,7 +141,18 @@ def _parse_date(raw: str) -> Optional[_dt.datetime]:
 
 
 def parse_input(text: str, target: Optional[str] = None) -> Dict[str, Any]:
-    """Parse openssl/sslyze-style text into a normalized profile dict."""
+    """Parse openssl/sslyze-style text into a normalized profile dict.
+
+    Raises:
+        TypeError: if *text* is not a string.
+        ValueError: if *text* is empty.
+    """
+    if not isinstance(text, str):
+        raise TypeError(
+            f"parse_input expects a str, got {type(text).__name__!r}"
+        )
+    if not text.strip():
+        raise ValueError("Input text is empty; nothing to parse")
     protocols: List[str] = []
     ciphers: List[str] = []
     cert_not_after_raw: Optional[str] = None
@@ -314,7 +333,7 @@ def _score_to_grade(score: int) -> str:
 def grade_report(findings: List[Finding]) -> tuple[int, str]:
     score = 100
     for f in findings:
-        score -= _PENALTY[f.severity]
+        score -= _PENALTY.get(f.severity, 0)
     # Any critical caps the grade at F regardless of arithmetic.
     if any(f.severity == "critical" for f in findings):
         score = min(score, 30)
@@ -322,9 +341,18 @@ def grade_report(findings: List[Finding]) -> tuple[int, str]:
     return score, _score_to_grade(score)
 
 
-def triage(text: str, target: Optional[str] = None, now: Optional[_dt.datetime] = None) -> TriageReport:
-    """Full pipeline: parse -> evaluate -> grade."""
-    now = now or _dt.datetime.utcnow()
+def triage(
+    text: str,
+    target: Optional[str] = None,
+    now: Optional[_dt.datetime] = None,
+) -> TriageReport:
+    """Full pipeline: parse -> evaluate -> grade.
+
+    Raises:
+        TypeError: if *text* is not a string.
+        ValueError: if *text* is empty or blank.
+    """
+    now = now or _dt.datetime.now(_UTC).replace(tzinfo=None)
     profile = parse_input(text, target=target)
     findings = _evaluate(profile, now)
     score, grade = grade_report(findings)
