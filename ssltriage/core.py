@@ -102,7 +102,7 @@ class TriageReport:
 # Parsing
 # ---------------------------------------------------------------------------
 
-_PROTO_LINE = re.compile(r"\b(SSLv2|SSLv3|TLSv1\.0|TLSv1\.1|TLSv1\.2|TLSv1\.3|TLS1\.0|TLS1\.1|TLS1\.2|TLS1\.3)\b")
+_PROTO_LINE = re.compile(r"\b(SSLv2|SSLv3|TLS\s*v?\s*1\.[0-3])\b")
 _CIPHER_LINE = re.compile(r"\b([A-Z0-9]+(?:[-_][A-Z0-9]+){2,})\b")
 _NOT_AFTER = re.compile(r"not\s*after\s*[:=]\s*(.+)", re.IGNORECASE)
 _TARGET_HINT = re.compile(r"(?:host|server|target|connecting to|CN\s*=)\s*[:=]?\s*([A-Za-z0-9._\-]+)", re.IGNORECASE)
@@ -162,7 +162,7 @@ def parse_input(text: str, target: Optional[str] = None) -> Dict[str, Any]:
         pm = _PROTO_LINE.search(stripped)
         if pm and not _DISABLED_HINT.search(low):
             tok = pm.group(1)
-            norm = tok.replace("TLS1.", "TLSv1.")
+            norm = re.sub(r"TLS\s*v?\s*1\.", "TLSv1.", tok)   # TLS 1.0 / TLS1.0 -> TLSv1.0
             if norm not in protocols:
                 protocols.append(norm)
 
