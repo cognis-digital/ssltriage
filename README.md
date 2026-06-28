@@ -20,6 +20,61 @@ pip install cognis-ssltriage
 ssltriage scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ ssltriage-emit --version
+ssltriage 0.1.0
+```
+
+```console
+$ ssltriage-emit --help
+usage: ssltriage [-h] [--version] {grade} ...
+
+Grade TLS config (protocols/ciphers/expiry) from openssl/sslyze output.
+
+positional arguments:
+  {grade}
+    grade     Grade TLS output from a file or stdin
+
+options:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
+```
+
+> Blocks above are real `ssltriage` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"Findings": [
+    {
+        "id": "1234567890",
+        "title": "Suspicious Network Traffic",
+        "description": "Network traffic from unknown IP address",
+        "severity": "medium",
+        "created_by": "John Doe",
+        "created_at": "2023-02-20T14:30:00Z"
+    },
+    {
+        "id": "2345678901",
+        "title": "Unusual File Access",
+        "description": "File access from unknown user",
+        "severity": "high",
+        "created_by": "Jane Smith",
+        "created_at": "2023-02-21T10:45:00Z"
+    }
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 1. **Install** the CLI (console script `ssltriage`):

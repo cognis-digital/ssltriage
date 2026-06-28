@@ -1,0 +1,13 @@
+$ ssltriage-emit --help
+
+usage: ssltriage [-h] [--version] {grade} ...
+
+Grade TLS config (protocols/ciphers/expiry) from openssl/sslyze output.
+
+positional arguments:
+  {grade}
+    grade     Grade TLS output from a file or stdin
+
+options:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit

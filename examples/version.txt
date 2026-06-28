@@ -1,0 +1,3 @@
+$ ssltriage-emit --version
+
+ssltriage 0.1.0
